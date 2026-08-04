@@ -4,8 +4,16 @@ import random
 # Initialize pygame
 pygame.init()
 #add the food eat sound
-pygame.mixer.init()
-eat_sound = pygame.mixer.Sound("eat.mp3")
+try:
+    pygame.mixer.init()
+    sound_enabled = True
+except pygame.error:
+    print("Audio device not available. Running without sound.")
+    sound_enabled = False
+if sound_enabled:
+    eat_sound = pygame.mixer.Sound("eat.mp3")
+else:
+    eat_sound = None
 # Screen settings
 WIDTH, HEIGHT = 600, 400
 BLOCK = 20
@@ -318,7 +326,8 @@ while running:
         # Food collision
         if new_head == food:
             if sound_on:
-                eat_sound.play()
+                if eat_sound:
+                    eat_sound.play()
             score += 1
             total_score+=1
             if total_score > high_score:
